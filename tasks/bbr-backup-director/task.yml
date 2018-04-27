@@ -9,8 +9,12 @@ image_resource:
 inputs:
   - name: bbr-pipeline-tasks-repo
   - name: binary
+  
 outputs:
   - name: director-backup-artifact
+
+caches:
+  - path: director-backup-artifact
 
 params:
   SKIP_SSL_VALIDATION: false
