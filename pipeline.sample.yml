@@ -15,23 +15,8 @@ jobs:
   - put: om-backup-artifact
     params:
       file: om-installation/installation.zip
-  on_failure:
+  ensure:
     task: cleanup-on-failure
-    config: 
-      platform: linux
-      image_resource:
-        type: docker-image
-        source: {repository: busybox}
-      run: 
-        path: sh
-        args: 
-        - -exc
-        - |
-          rm -rf om-installation/*
-      inputs:
-      - name: om-installation
-  on_success:
-    task: cleanup-on-success
     config: 
       platform: linux
       image_resource:
@@ -87,8 +72,8 @@ jobs:
   - put: ert-backup-bucket
     params:
       file: ert-backup-artifact/ert-backup.tar
-  on_failure:
-    task: cleanup-on-failure
+  ensure:
+    task: cleanup
     config: 
       platform: linux
       image_resource:
@@ -99,24 +84,9 @@ jobs:
         args: 
         - -exc
         - |
-          rm -rf bbr-release/*
+          rm -rf ert-backup-artifact/*
       inputs:
-      - name: bbr-release
-  on_success:
-    task: cleanup-on-success
-    config: 
-      platform: linux
-      image_resource:
-        type: docker-image
-        source: {repository: busybox}
-      run: 
-        path: sh
-        args: 
-        - -exc
-        - |
-          rm -rf bbr-release/*
-      inputs:
-      - name: bbr-release
+      - name: ert-backup-artifact
 
 - name: bbr-backup-director
   serial: true
@@ -159,23 +129,8 @@ jobs:
   - put: director-backup-bucket
     params:
       file: director-backup-artifact/director-backup.tar
-  on_failure:
-    task: cleanup-on-failure
-    config: 
-      platform: linux
-      image_resource:
-        type: docker-image
-        source: {repository: busybox}
-      run: 
-        path: sh
-        args: 
-        - -exc
-        - |
-          rm -rf director-backup-artifact/*
-      inputs:
-      - name: director-backup-artifact
-  on_success:
-    task: cleanup-on-success
+  ensure:
+    task: cleanup
     config: 
       platform: linux
       image_resource:
